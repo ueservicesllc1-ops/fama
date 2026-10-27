@@ -1,0 +1,45 @@
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <!-- Gradiente de fondo -->
+      <radialGradient id="bgGrad" cx="50%" cy="40%" r="65%">
+        <stop offset="0%" stop-color="#1A2234" />
+        <stop offset="60%" stop-color="#0E1422" />
+        <stop offset="100%" stop-color="#070B14" />
+      </radialGradient>
+
+      <!-- Gradiente Dorado FAMA -->
+      <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#FFF2CE" />
+        <stop offset="25%" stop-color="#E5C378" />
+        <stop offset="65%" stop-color="#C69A4B" />
+        <stop offset="100%" stop-color="#9E7429" />
+      </linearGradient>
+
+      <!-- Resplandor Dorado -->
+      <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+        <feGaussianBlur stdDeviation="10.24" result="blur" />
+        <feComposite in="SourceGraphic" in2="blur" operator="over" />
+      </filter>
+    </defs>
+
+    <!-- Fondo Rectangular / Cuadrado -->
+    <rect width="512" height="512" fill="url(#bgGrad)" rx="112.64" />
+
+    <!-- Aro decorativo sutil -->
+    <circle cx="256" cy="256" r="225.28" 
+      fill="none" stroke="url(#goldGrad)" stroke-width="6.144" opacity="0.4" />
+
+    <!-- Contenedor del símbolo centrado -->
+    <g transform="translate(51.19999999999999, 51.19999999999999) scale(17.066666666666666)">
+      <!-- Sombra / Resplandor de la Llama -->
+      <path
+        d="M12 2C8.5 6 5 9.5 5 14a7 7 0 0 0 14 0c0-4.5-3.5-8-7-12zm0 18a5 5 0 0 1-5-5c0-2.8 2-5.4 4.5-8.5C10.5 9 10 11 10 12a2 2 0 0 0 4 0c0-1.5-.5-2.5-1.5-3.5 2.5 3.1 4.5 5.7 4.5 8.5a5 5 0 0 1-5 5z"
+        fill="#C69A4B" opacity="0.3" filter="url(#glow)"
+      />
+      <!-- Llama Principal Dorada -->
+      <path
+        d="M12 2C8.5 6 5 9.5 5 14a7 7 0 0 0 14 0c0-4.5-3.5-8-7-12zm0 18a5 5 0 0 1-5-5c0-2.8 2-5.4 4.5-8.5C10.5 9 10 11 10 12a2 2 0 0 0 4 0c0-1.5-.5-2.5-1.5-3.5 2.5 3.1 4.5 5.7 4.5 8.5a5 5 0 0 1-5 5z"
+        fill="url(#goldGrad)"
+      />
+    </g>
+  </svg>

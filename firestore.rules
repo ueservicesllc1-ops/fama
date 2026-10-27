@@ -1,0 +1,304 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Funciones auxiliares de seguridad
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    function isAdmin() {
+      return isAuthenticated() && (
+        request.auth.token.role == 'admin' ||
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin'
+      );
+    }
+
+    // Personal pastoral autorizado: Rol 'pastor' o 'admin' con permiso explícito pastoralAccess
+    function isPastoralStaff() {
+      return isAuthenticated() && (
+        request.auth.token.role == 'pastor' ||
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'pastor' ||
+        (
+          (request.auth.token.role == 'admin' || get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin') &&
+          get(/databases/$(database)/documents/users/$(request.auth.uid)).data.pastoralAccess == true
+        )
+      );
+    }
+
+    // Perfiles de Usuarios
+    match /users/{userId} {
+      allow read: if true;
+      allow create: if isOwner(userId) && (!('role' in request.resource.data) || request.resource.data.role == 'member');
+      allow update: if isOwner(userId) && (!('role' in request.resource.data) || request.resource.data.role == resource.data.role || isAdmin());
+      allow delete: if isAdmin();
+    }
+
+    // Cultos y Sesiones
+    match /cultos/{cultoId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // Asistentes y Presencia en el Auditorio
+    match /attendees/{attendeeId} {
+      allow read: if true;
+      allow create: if isAuthenticated() && request.resource.data.uid == request.auth.uid;
+      allow update: if isAuthenticated() && (resource.data.uid == request.auth.uid || isAdmin());
+      allow delete: if isAuthenticated() && (resource.data.uid == request.auth.uid || isAdmin());
+    }
+
+    // Mensajes de Chat del Culto
+    match /messages/{messageId} {
+      allow read: if true;
+      allow create: if isAuthenticated()
+        && request.resource.data.userId == request.auth.uid
+        && request.resource.data.content is string
+        && request.resource.data.content.size() > 0
+        && request.resource.data.content.size() <= 400;
+      allow update, delete: if isAdmin() || (isAuthenticated() && resource.data.userId == request.auth.uid);
+    }
+
+    // Solicitudes para Hablar (Mano Levantada)
+    match /hand_requests/{requestId} {
+      allow read: if isAuthenticated() && (resource.data.userId == request.auth.uid || isAdmin());
+      allow create: if isAuthenticated() && request.resource.data.userId == request.auth.uid;
+      allow update: if isAuthenticated() && (
+        (resource.data.userId == request.auth.uid && request.resource.data.status == 'cancelled') ||
+        isAdmin()
+      );
+      allow delete: if isAdmin();
+    }
+
+    // Reacciones en Vivo
+    match /reactions/{reactionId} {
+      allow read: if true;
+      allow create: if isAuthenticated() && request.resource.data.userId == request.auth.uid;
+      allow update, delete: if isAdmin();
+    }
+
+    // Peticiones de Oración
+    match /prayer_requests/{requestId} {
+      allow read: if true;
+      allow create: if request.resource.data.requestText is string
+        && request.resource.data.requestText.size() > 0
+        && (!request.resource.data.isAnonymous || request.resource.data.userId == null);
+      allow update: if isAuthenticated() && (
+        // Permitir sumarse a "He orado" agregando su UID a prayedByUsers
+        request.resource.data.diff(resource.data).affectedKeys().hasOnly(['prayersCount', 'prayedByUsers'])
+      ) || isAdmin();
+      allow delete: if isAdmin();
+    }
+
+    // Grabaciones y Medios
+    match /recordings/{recordingId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // Eventos
+    match /events/{eventId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // Galerías y Fotos
+    match /galleries/{galleryId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /photos/{photoId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // Grupos y Ministerios
+    match /groups/{groupId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /ministries/{ministryId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // Mensajes de Contacto Pastoral
+    // El guardado se realiza de forma segura en el servidor mediante /api/contact (Firebase Admin SDK)
+    // La lectura, gestión y reintentos están estrictamente reservados a administradores autorizados
+    match /contacts/{contactId} {
+      allow read, update, delete: if isAdmin();
+      allow create: if false; // Solo el servidor seguro puede registrar nuevos contactos
+    }
+
+    // Solicitudes a Grupos de Conexión
+    match /group_applications/{applicationId} {
+      allow read: if isAdmin() || (isAuthenticated() && resource.data.userId == request.auth.uid);
+      allow create: if false; // Mediante API segura en servidor con validación de no duplicados
+      allow update, delete: if isAdmin();
+    }
+
+    // Postulaciones a Ministerios
+    match /ministry_applications/{applicationId} {
+      allow read: if isAdmin() || (isAuthenticated() && resource.data.userId == request.auth.uid);
+      allow create: if false; // Mediante API segura en servidor con validación de no duplicados
+      allow update, delete: if isAdmin();
+    }
+
+    // Inscripciones a Eventos Congregacionales
+    match /event_registrations/{registrationId} {
+      allow read: if isAdmin() || (isAuthenticated() && resource.data.userId == request.auth.uid);
+      allow create: if false; // Mediante API segura en servidor con prevención de duplicados
+      allow update, delete: if isAdmin();
+    }
+
+    // Transacciones Financieras y Tesorería
+    // Lectura restringida a administradores; creación, edición y anulación exclusivamente por API de servidor segura
+    match /financial_transactions/{transactionId} {
+      allow read: if isAdmin();
+      allow write: if false; // Solo el servidor seguro puede registrar o anular transacciones con auditoría
+    }
+
+    // Control de Asistencia y Sesiones de Culto
+    // Lectura para administradores; creación y correcciones auditadas exclusivamente por API de servidor
+    match /attendance_sessions/{sessionId} {
+      allow read: if isAdmin();
+      allow write: if false;
+    }
+
+    match /attendance_records/{recordId} {
+      allow read: if isAdmin();
+      allow write: if false;
+    }
+
+    // Registro de Visitantes (con consentimiento explícito y sin creación automática de cuentas)
+    match /visitors/{visitorId} {
+      allow read: if isAdmin();
+      allow write: if false;
+    }
+
+    // Seguimiento Pastoral y Notas Privadas (Estrictamente confidencial para roles pastoral y admin)
+    match /pastoral_followups/{followupId} {
+      allow read: if isPastoralStaff() || isAdmin();
+      allow write: if false;
+    }
+
+    // ETAPA 10: Solicitudes de Atención Pastoral, Citas y Peticiones de Oración
+    // Solo el miembro propietario y el personal pastoral autorizado pueden leer su solicitud
+    // Creación, cambios de estado y notas internas gestionados exclusivamente por APIs de servidor
+    match /pastoral_requests/{requestId} {
+      allow read: if isPastoralStaff() || (isAuthenticated() && resource.data.userId == request.auth.uid);
+      allow write: if false;
+
+      // Subcolección de notas internas: NUNCA leíble por miembros
+      match /internal_notes/{noteId} {
+        allow read, write: if isPastoralStaff();
+      }
+    }
+    // ETAPA 11: Gestión de Voluntarios, Jornadas de Servicio y Asignaciones
+    match /service_shifts/{shiftId} {
+      allow read: if isAuthenticated();
+      allow write: if false; // Solo mediante API de servidor con validación de coordinadores
+    }
+
+    match /service_assignments/{assignmentId} {
+      allow read: if isAuthenticated() && (
+        resource.data.volunteerUid == request.auth.uid || isAdmin()
+      );
+      allow write: if false; // Gestionado exclusivamente por API con validación de conflictos
+    }
+
+    match /ministry_volunteers/{volunteerId} {
+      allow read: if isAuthenticated();
+      allow write: if false;
+    }
+
+    // ETAPA 12: Inventario, Préstamos y Mantenimiento de Recursos
+    match /inventory_items/{itemId} {
+      allow read: if isAuthenticated();
+      allow write: if isAdmin();
+    }
+
+    match /resource_loans/{loanId} {
+      allow read: if isAuthenticated() && (
+        resource.data.borrowerUid == request.auth.uid || isAdmin()
+      );
+      allow write: if false; // Gestionado exclusivamente por API con validación de stock y transacciones
+    }
+
+    match /resource_maintenance/{maintenanceId} {
+      allow read: if isAdmin();
+      allow write: if false;
+    }
+
+    // ETAPA 13: Gestión de Instalaciones y Mantenimiento Físico
+    match /facilities/{facilityId} {
+      allow read: if isAuthenticated();
+      allow write: if isAdmin();
+    }
+
+    match /maintenance_tickets/{ticketId} {
+      allow read: if isAuthenticated() && (
+        resource.data.reportedByUid == request.auth.uid || isAdmin()
+      );
+      allow write: if false; // Gestionado exclusivamente por API de servidor con verificación y trazabilidad
+    }
+
+    match /preventive_tasks/{taskId} {
+      allow read: if isAuthenticated() && (
+        resource.data.assignedToUid == request.auth.uid || isAdmin()
+      );
+      allow write: if false; // Gestionado por API con validación de checklists y reprogramación
+    }
+
+    match /event_preparations/{prepId} {
+      allow read: if isAuthenticated();
+      allow write: if false; // Gestionado por API con verificación final
+    }
+
+    // FAMA STORE: Tienda Oficial de RENACER CHURCH
+    match /store_products/{productId} {
+      // Público puede leer productos publicados; administradores pueden leer todos (incluso borradores)
+      allow read: if resource.data.status == 'published' || isAdmin();
+      allow write: if isAdmin();
+    }
+
+    match /store_orders/{orderId} {
+      // Clientes autenticados solo leen sus propios pedidos; administradores leen todos
+      allow read: if (isAuthenticated() && (resource.data.customerUid == request.auth.uid || resource.data.userId == request.auth.uid)) || isAdmin();
+      allow write: if false; // Gestionado exclusivamente por APIs seguras de servidor con validación de inventario
+    }
+
+    // Notificaciones Individuales de Miembros (ETAPA 7)
+    // Cada miembro solo puede consultar y marcar como leídas sus propias notificaciones
+    match /notifications/{notificationId} {
+      allow read: if isAuthenticated() && (resource.data.userId == request.auth.uid || isAdmin());
+      allow update: if isAuthenticated() && resource.data.userId == request.auth.uid
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['read', 'readAt']);
+      allow create, delete: if isAdmin();
+    }
+
+    // Comunicados Administrativos e Institucionales
+    match /announcements/{announcementId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // Registro y Auditoría de Envíos de Correo
+    match /email_broadcasts/{broadcastId} {
+      allow read, write: if isAdmin();
+    }
+
+    // Configuraciones Generales
+    match /settings/{settingId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+  }
+}

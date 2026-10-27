@@ -1,0 +1,75 @@
+import type { MetadataRoute } from 'next';
+
+export default function manifest(): MetadataRoute.Manifest {
+  return {
+    name: 'FAMA | Renacer Church — Plataforma Digital',
+    short_name: 'FAMA',
+    description:
+      'Plataforma digital integral para la congregación cristiana FAMA. Auditorio virtual interactivo, cultos en vivo, predicaciones y vida comunitaria.',
+    start_url: '/',
+    scope: '/',
+    id: '/',
+    display: 'standalone',
+    display_override: ['window-controls-overlay', 'standalone', 'minimal-ui'],
+    background_color: '#070B14',
+    theme_color: '#0B0F17',
+    orientation: 'portrait-primary',
+    lang: 'es',
+    dir: 'ltr',
+    categories: ['lifestyle', 'education', 'social'],
+    icons: [
+      {
+        src: '/icons/icon-192x192.png',
+        sizes: '192x192',
+        type: 'image/png',
+        purpose: 'any',
+      },
+      {
+        src: '/icons/icon-512x512.png',
+        sizes: '512x512',
+        type: 'image/png',
+        purpose: 'any',
+      },
+      {
+        src: '/icons/icon-maskable-512x512.png',
+        sizes: '512x512',
+        type: 'image/png',
+        purpose: 'maskable',
+      },
+      {
+        src: '/icons/apple-touch-icon.png',
+        sizes: '180x180',
+        type: 'image/png',
+      },
+      {
+        src: '/icons/icon.svg',
+        sizes: '512x512',
+        type: 'image/svg+xml',
+        purpose: 'any',
+      },
+    ],
+    shortcuts: [
+      {
+        name: 'Auditorio Virtual',
+        short_name: 'Auditorio',
+        description: 'Accede a la sala de transmisión en vivo y cultos interactivos.',
+        url: '/iglesia-virtual',
+        icons: [{ src: '/icons/icon-192x192.png', sizes: '192x192' }],
+      },
+      {
+        name: 'Cultos & Predicaciones',
+        short_name: 'Cultos',
+        description: 'Consulta los horarios y transmisiones de cultos.',
+        url: '/cultos',
+        icons: [{ src: '/icons/icon-192x192.png', sizes: '192x192' }],
+      },
+      {
+        name: 'Notificaciones',
+        short_name: 'Avisos',
+        description: 'Revisa tus avisos congregacionales y comunicados.',
+        url: '/perfil?tab=notificaciones',
+        icons: [{ src: '/icons/icon-192x192.png', sizes: '192x192' }],
+      },
+    ],
+  };
+}
