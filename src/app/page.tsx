@@ -256,16 +256,23 @@ export default function HomePage() {
             
             {/* Columna Izquierda: Mensaje y Significado FAMA */}
             <div className="lg:col-span-6 space-y-6 text-[#17191C]">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/logo-fondo-blanco.png"
+                alt="FAMA — Fe · Amor · Misión · Almas"
+                className="h-20 sm:h-24 w-auto object-contain"
+              />
+
               <div className="inline-flex items-center gap-2.5 text-xs font-semibold tracking-[0.25em] text-[#C69A4B] uppercase">
                 <span className="w-8 h-[1px] bg-[#C69A4B]"></span>
                 <span>NUESTRA ESENCIA</span>
               </div>
 
               <div className="space-y-2">
-                <h2 className="font-editorial text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-[#17191C]">
-                  FAMA
+                <h2 className="font-editorial text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-[#17191C]">
+                  Una Iglesia, Un Solo Propósito
                 </h2>
-                <h3 className="font-editorial text-2xl sm:text-3xl font-semibold text-[#17191C]/90">
+                <h3 className="font-editorial text-xl sm:text-2xl font-semibold text-[#17191C]/90">
                   Fe, Amor, Misión y Almas
                 </h3>
               </div>

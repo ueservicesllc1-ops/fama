@@ -156,15 +156,25 @@ export default function AdminPage() {
         </div>
       )}
 
-      {/* Cabecera */}
-      <header className="mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <p className="text-[11px] font-extrabold uppercase tracking-[0.25em] text-[#D4AF37]">
-            FAMA PLATAFORMA
-          </p>
-          <h1 className="text-2xl font-black tracking-tight text-white sm:text-3xl">
-            Panel de Control y Administración
-          </h1>
+      {/* Cabecera con Logo Oficial */}
+      <header className="mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#1E2D4A]/60 pb-5">
+        <div className="flex items-center gap-4">
+          <Link href="/" title="Ir a la página pública">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/logo-fondo-negro.png"
+              alt="FAMA"
+              className="h-12 w-auto object-contain hover:scale-105 transition-transform"
+            />
+          </Link>
+          <div>
+            <p className="text-[10px] font-extrabold uppercase tracking-[0.25em] text-[#D4AF37]">
+              FAMA PLATAFORMA OFICIAL
+            </p>
+            <h1 className="text-xl sm:text-2xl font-black tracking-tight text-white">
+              Panel de Control y Administración
+            </h1>
+          </div>
         </div>
 
         {user ? (

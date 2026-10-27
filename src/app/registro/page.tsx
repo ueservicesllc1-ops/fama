@@ -63,22 +63,20 @@ export default function RegistroPage() {
         {/* Resplandor decorativo sutil */}
         <div className="absolute top-0 left-0 w-40 h-40 bg-[#D4AF37]/5 blur-3xl pointer-events-none" />
 
-        {/* Identidad de la Marca */}
-        <div className="text-center space-y-2">
-          <Link href="/" className="inline-flex items-center gap-3 group">
-            <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#D4AF37] to-[#8C6D1F] p-[1.5px] shadow-lg shadow-[#D4AF37]/20">
-              <div className="w-full h-full bg-[#070B14] rounded-[14px] flex items-center justify-center">
-                <span className="font-serif font-black text-2xl text-[#F3D079]">F</span>
-              </div>
-            </div>
+        {/* Identidad de la Marca Oficial */}
+        <div className="text-center space-y-3">
+          <Link href="/" className="inline-block group" title="FAMA - Volver al Inicio">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/logo-fondo-negro.png"
+              alt="FAMA — Fe · Amor · Misión · Almas"
+              className="h-20 sm:h-24 w-auto mx-auto object-contain drop-shadow-[0_4px_24px_rgba(212,175,55,0.25)] group-hover:scale-105 transition-transform"
+            />
           </Link>
 
           <h2 className="text-2xl font-black text-white tracking-tight">
             Crear Cuenta en FAMA
           </h2>
-          <p className="text-xs text-[#D4AF37] font-semibold tracking-widest uppercase">
-            FE · AMOR · MISIÓN · ALMAS
-          </p>
         </div>
 
         {user && (

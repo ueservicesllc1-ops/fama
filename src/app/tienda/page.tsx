@@ -142,7 +142,14 @@ export default function TiendaPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             {/* Text Side */}
-            <div className="space-y-6 text-left">
+            <div className="space-y-5 text-left">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/logo-fondo-blanco.png"
+                alt="FAMA — RENACER CHURCH"
+                className="h-16 sm:h-20 w-auto object-contain"
+              />
+
               <div className="inline-flex items-center gap-2 rounded-full border border-[#D4AF37]/40 bg-[#D4AF37]/10 px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-[#996F0A]">
                 <Sparkles className="h-3.5 w-3.5 text-[#D4AF37]" />
                 <span>Tienda Oficial • RENACER CHURCH</span>

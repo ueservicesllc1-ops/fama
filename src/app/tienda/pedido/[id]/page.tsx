@@ -150,14 +150,21 @@ export default function OrderConfirmationPage() {
       {/* Main Order Card */}
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="bg-white rounded-3xl border border-stone-200/90 shadow-sm p-8 sm:p-12 space-y-8 print:border-none print:shadow-none print:p-0">
-          {/* Header & Status */}
-          <div className="text-center space-y-3 pb-8 border-b border-stone-100">
-            <div className="w-16 h-16 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center mx-auto text-3xl">
-              <CheckCircle className="w-8 h-8" />
+          {/* Header & Status con Logo Oficial */}
+          <div className="text-center space-y-4 pb-8 border-b border-stone-100">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/logo-fondo-blanco.png"
+              alt="FAMA — RENACER CHURCH"
+              className="h-16 sm:h-20 w-auto mx-auto object-contain"
+            />
+
+            <div className="w-14 h-14 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center mx-auto text-2xl">
+              <CheckCircle className="w-7 h-7" />
             </div>
 
             <span className="text-xs font-serif tracking-widest text-[#C69A4B] font-semibold uppercase block">
-              RENACER CHURCH · FAMA STORE
+              COMPROBANTE OFICIAL DE RESERVA Y PEDIDO
             </span>
 
             <h1 className="text-3xl sm:text-4xl font-serif font-bold text-[#181A20]">

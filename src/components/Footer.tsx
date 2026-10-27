@@ -10,20 +10,15 @@ export const Footer: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 mb-12">
           
-          {/* Columna 1: Identidad FAMA */}
+          {/* Columna 1: Identidad FAMA Oficial */}
           <div className="lg:col-span-2 space-y-4">
-            <Link href="/" className="flex items-center gap-3 group">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#D4AF37] to-[#8C6D1F] p-[1.5px]">
-                <div className="w-full h-full bg-[#070B14] rounded-[10px] flex items-center justify-center">
-                  <span className="font-serif font-black text-lg text-[#F3D079]">F</span>
-                </div>
-              </div>
-              <div className="flex flex-col">
-                <span className="text-xl font-black tracking-widest text-white">FAMA</span>
-                <span className="text-[9px] font-semibold tracking-[0.2em] text-[#D4AF37] uppercase">
-                  FE · AMOR · MISIÓN · ALMAS
-                </span>
-              </div>
+            <Link href="/" className="inline-block group py-1" title="FAMA - Inicio">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/logo-fondo-negro.png"
+                alt="FAMA — Fe · Amor · Misión · Almas"
+                className="h-14 sm:h-16 w-auto object-contain group-hover:opacity-90 transition-opacity"
+              />
             </Link>
 
             <p className="text-sm text-slate-400 leading-relaxed max-w-sm">

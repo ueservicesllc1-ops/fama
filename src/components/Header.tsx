@@ -75,21 +75,14 @@ export const Header: React.FC = () => {
       <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between">
           
-          {/* Logo & Marca FAMA - RENACER CHURCH */}
-          <Link href="/" className="flex items-center gap-3 group select-none py-1">
-            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-[#C69A4B]/10 border border-[#C69A4B]/30 flex items-center justify-center text-[#C69A4B] group-hover:scale-105 group-hover:bg-[#C69A4B]/20 transition-all">
-              <svg viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6 sm:w-7 sm:h-7">
-                <path d="M12 2C8.5 6 5 9.5 5 14a7 7 0 0 0 14 0c0-4.5-3.5-8-7-12zm0 18a5 5 0 0 1-5-5c0-2.8 2-5.4 4.5-8.5C10.5 9 10 11 10 12a2 2 0 0 0 4 0c0-1.5-.5-2.5-1.5-3.5 2.5 3.1 4.5 5.7 4.5 8.5a5 5 0 0 1-5 5z"/>
-              </svg>
-            </div>
-            <div className="flex flex-col justify-center">
-              <span className="font-editorial text-2xl sm:text-[27px] font-bold tracking-[0.16em] text-white group-hover:text-[#C69A4B] transition-colors leading-none">
-                FAMA
-              </span>
-              <span className="text-[8.5px] sm:text-[9.5px] font-semibold tracking-[0.26em] text-[#C69A4B] uppercase mt-1 leading-none">
-                RENACER CHURCH
-              </span>
-            </div>
+          {/* Logo Oficial FAMA - RENACER CHURCH */}
+          <Link href="/" className="flex items-center gap-3 group select-none py-1" title="FAMA - Inicio">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/logo-fondo-negro.png"
+              alt="FAMA — Fe · Amor · Misión · Almas"
+              className="h-10 sm:h-12 w-auto object-contain group-hover:scale-105 transition-transform drop-shadow-[0_2px_12px_rgba(198,154,75,0.18)]"
+            />
           </Link>
 
           {/* Navegación Desktop */}
